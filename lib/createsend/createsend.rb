@@ -13,15 +13,18 @@ module CreateSend
     attr_reader :data
     def initialize(data)
       @data = data
-      # @data should contain Code, Message and optionally ResultData
-      super "The CreateSend API responded with the following error"\
-        " - #{@data.Code}: #{@data.Message}#{extra_result_data}"
+      super format_data_as_message
     end
 
     private
 
     def extra_result_data
       "\nExtra result data: #{@data.ResultData}" if @data.ResultData
+    end
+
+    def format_data_as_message
+      "The CreateSend API responded with the following error"\
+        " - #{@data.Code}: #{@data.Message}#{extra_result_data}"
     end
   end
 
