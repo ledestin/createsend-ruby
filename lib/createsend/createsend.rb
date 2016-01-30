@@ -14,9 +14,14 @@ module CreateSend
     def initialize(data)
       @data = data
       # @data should contain Code, Message and optionally ResultData
-      extra = "\nExtra result data: #{@data.ResultData}" if @data.ResultData 
       super "The CreateSend API responded with the following error"\
-        " - #{@data.Code}: #{@data.Message}#{extra}"
+        " - #{@data.Code}: #{@data.Message}#{extra_result_data}"
+    end
+
+    private
+
+    def extra_result_data
+      "\nExtra result data: #{@data.ResultData}" if @data.ResultData
     end
   end
 
