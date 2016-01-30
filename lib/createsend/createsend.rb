@@ -18,11 +18,9 @@ module CreateSend
 
     private
 
-    def extra_result_data
-      "\nExtra result data: #{@data.ResultData}" if @data.ResultData
-    end
-
     def format_data_as_message
+      extra_result_data = "\nExtra result data: #{@data.ResultData}" \
+        if @data.ResultData
       "The CreateSend API responded with the following error"\
         " - #{@data.Code}: #{@data.Message}#{extra_result_data}"
     end
