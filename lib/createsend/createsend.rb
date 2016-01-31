@@ -49,11 +49,12 @@ module CreateSend
 
   # Provides high level CreateSend functionality/data you'll probably need.
   class CreateSend
+    include Certificate
     include HTTParty
     attr_reader :auth_details
 
     # Specify cert authority file for cert validation
-    ssl_ca_file File.expand_path('cacert.pem', File.dirname(__FILE__))
+    ssl_ca_file cert_path
 
 
     # Set a custom user agent string to be used when instances of
