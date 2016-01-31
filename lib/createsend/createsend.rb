@@ -63,7 +63,12 @@ module CreateSend
     # user_agent - The user agent string to use in the User-Agent header when
     #              instances of this class make API calls.
     def self.user_agent(user_agent)
-      headers({'User-Agent' => user_agent || USER_AGENT_STRING})
+      headers({'User-Agent' => user_agent})
+    end
+
+    # Set user agent to be CreateSend.
+    def self.default_user_agent
+      user_agent USER_AGENT_STRING
     end
 
     # Get the authorization URL for your application, given the application's
