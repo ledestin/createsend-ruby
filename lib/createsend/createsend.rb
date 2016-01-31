@@ -49,7 +49,7 @@ module CreateSend
 
   # Provides high level CreateSend functionality/data you'll probably need.
   class CreateSend
-    include Certificate
+    extend Certificate
     include HTTParty
     attr_reader :auth_details
 
@@ -61,8 +61,7 @@ module CreateSend
     # CreateSend::CreateSend make API calls.
     #
     # user_agent - The user agent string to use in the User-Agent header when
-    #              instances of this class make API calls. If set to nil, the
-    #              default value of CreateSend::USER_AGENT_STRING will be used.
+    #              instances of this class make API calls.
     def self.user_agent(user_agent)
       headers({'User-Agent' => user_agent || USER_AGENT_STRING})
     end
