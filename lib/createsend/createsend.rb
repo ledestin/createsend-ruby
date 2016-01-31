@@ -53,7 +53,8 @@ module CreateSend
     attr_reader :auth_details
 
     # Specify cert authority file for cert validation
-    ssl_ca_file File.expand_path(File.join(File.dirname(__FILE__), 'cacert.pem'))
+    ssl_ca_file File.expand_path('cacert.pem', File.dirname(__FILE__))
+
 
     # Set a custom user agent string to be used when instances of
     # CreateSend::CreateSend make API calls.
