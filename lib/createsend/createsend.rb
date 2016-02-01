@@ -3,6 +3,7 @@ require 'uri'
 require 'httparty'
 require 'hashie'
 require 'json'
+require 'active_support/core_ext/object/to_query'
 
 module CreateSend
 
@@ -74,11 +75,11 @@ module CreateSend
     # Get the authorization URL for your application, given the application's
     # client_id, redirect_uri, scope, and optional state data.
     def self.authorize_url(client_id, redirect_uri, scope, state=nil)
-      qs = "client_id=#{CGI.escape(client_id.to_s)}"
-      qs << "&redirect_uri=#{CGI.escape(redirect_uri.to_s)}"
-      qs << "&scope=#{CGI.escape(scope.to_s)}"
-      qs << "&state=#{CGI.escape(state.to_s)}" if state
-      "#{@@oauth_base_uri}?#{qs}"
+      params = {
+        client_id: client_id, redirect_uri: redirect_uri, scope: scope
+      }
+      params[:state] = state if state
+      "#{@@oauth_base_uri}?#{params.to_query}"
     end
 
     # Exchange a provided OAuth code for an OAuth access token, 'expires in'
