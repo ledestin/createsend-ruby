@@ -53,7 +53,7 @@ class CreateSendTest < Test::Unit::TestCase
       access_token, expires_in, refresh_token = CreateSend::CreateSend.exchange_token(
         client_id, client_secret, redirect_uri, code)
 
-      FakeWeb.last_request.body.should == "grant_type=authorization_code&client_id=8998879&client_secret=iou0q9wud0q9wd0q9wid0q9iwd0q9wid0q9wdqwd&redirect_uri=http%3A%2F%2Fexample.com%2Fauth&code=jdiwouo8uowi9o9o"
+      FakeWeb.last_request.body.should == "client_id=8998879&client_secret=iou0q9wud0q9wd0q9wid0q9iwd0q9wid0q9wdqwd&code=jdiwouo8uowi9o9o&grant_type=authorization_code&redirect_uri=http%3A%2F%2Fexample.com%2Fauth"
       access_token.should == "SlAV32hkKG"
       expires_in.should == 1209600
       refresh_token.should == "tGzv3JOkF0XG5Qx2TlKWIA"
@@ -71,7 +71,7 @@ class CreateSendTest < Test::Unit::TestCase
       lambda { access_token, expires_in, refresh_token = CreateSend::CreateSend.exchange_token(
         client_id, client_secret, redirect_uri, code) }.should raise_error(
           Exception, 'Error exchanging code for access token: invalid_grant - Specified code was invalid or expired')
-      FakeWeb.last_request.body.should == "grant_type=authorization_code&client_id=8998879&client_secret=iou0q9wud0q9wd0q9wid0q9iwd0q9wid0q9wdqwd&redirect_uri=http%3A%2F%2Fexample.com%2Fauth&code=invalidcode"
+      FakeWeb.last_request.body.should == "client_id=8998879&client_secret=iou0q9wud0q9wd0q9wid0q9iwd0q9wid0q9wdqwd&code=invalidcode&grant_type=authorization_code&redirect_uri=http%3A%2F%2Fexample.com%2Fauth"
     end
 
     should "refresh an access token given a refresh token" do
