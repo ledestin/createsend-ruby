@@ -87,11 +87,7 @@ module CreateSend
     def self.exchange_token(client_id, client_secret, redirect_uri, code)
       response = request_oauth_token(client_id, client_secret, redirect_uri,
                                      code)
-      if response.has_key? 'error' and response.has_key? 'error_description'
-        err = "Error exchanging code for access token: "
-        err << "#{response['error']} - #{response['error_description']}"
-        raise err
-      end
+      check_response('Error exchanging code for access token', response)
       r = Hashie::Mash.new(response)
       [r.access_token, r.expires_in, r.refresh_token]
     end
@@ -102,15 +98,19 @@ module CreateSend
       options = {
         :body => "grant_type=refresh_token&refresh_token=#{CGI.escape(refresh_token)}" }
       response = HTTParty.post(@@oauth_token_uri, options)
-      if response.has_key? 'error' and response.has_key? 'error_description'
-        err = "Error refreshing access token: "
-        err << "#{response['error']} - #{response['error_description']}"
-        raise err
-      end
+      check_response('Error refreshing access token', response)
       r = Hashie::Mash.new(response)
       [r.access_token, r.expires_in, r.refresh_token]
     end
 
+    def self.check_response(message, response)
+      if response.has_key? 'error' and response.has_key? 'error_description'
+        err = "#{message}: "
+        err << "#{response['error']} - #{response['error_description']}"
+        raise err
+      end
+    end
+    private_class_method :check_response
 
     def self.request_oauth_token(client_id, client_secret, redirect_uri, code)
       body = {
