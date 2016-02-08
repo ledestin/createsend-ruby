@@ -93,9 +93,7 @@ module CreateSend
     # Refresh an OAuth access token, given an OAuth refresh token.
     # Returns a new access token, 'expires in' value, and refresh token.
     def self.refresh_access_token(refresh_token)
-      options = {
-        :body => "grant_type=refresh_token&refresh_token=#{CGI.escape(refresh_token)}" }
-      response = HTTParty.post(@@oauth_token_uri, options)
+      response = request_access_token(refresh_token)
       check_response('Error refreshing access token', response)
       response.values_at *%w(access_token expires_in refresh_token)
     end
@@ -108,6 +106,15 @@ module CreateSend
       end
     end
     private_class_method :check_response
+
+    def request_access_token(refresh_token)
+      body = {
+        grant_type: 'refresh_token',
+        refresh_token: refresh_token
+      }.to_query
+      HTTParty.post(@@oauth_token_uri, body: body)
+    end
+    private_class_method :request_access_token
 
     def self.request_token(client_id, client_secret, redirect_uri, code)
       body = {
