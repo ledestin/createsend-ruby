@@ -85,8 +85,7 @@ module CreateSend
     # Exchange a provided OAuth code for an OAuth access token, 'expires in'
     # value, and refresh token.
     def self.exchange_token(client_id, client_secret, redirect_uri, code)
-      response = request_oauth_token(client_id, client_secret, redirect_uri,
-                                     code)
+      response = request_token(client_id, client_secret, redirect_uri, code)
       check_response('Error exchanging code for access token', response)
       response.values_at *%w(access_token expires_in refresh_token)
     end
@@ -110,7 +109,7 @@ module CreateSend
     end
     private_class_method :check_response
 
-    def self.request_oauth_token(client_id, client_secret, redirect_uri, code)
+    def self.request_token(client_id, client_secret, redirect_uri, code)
       body = {
         grant_type: 'authorization_code',
         client_id: client_id,
@@ -120,7 +119,7 @@ module CreateSend
       }.to_query
       HTTParty.post(@@oauth_token_uri, {:body => body})
     end
-    private_class_method :request_oauth_token
+    private_class_method :request_token
 
     def initialize(*args)
       if args.size > 0
