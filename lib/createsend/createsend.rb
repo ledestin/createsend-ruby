@@ -88,8 +88,7 @@ module CreateSend
       response = request_oauth_token(client_id, client_secret, redirect_uri,
                                      code)
       check_response('Error exchanging code for access token', response)
-      r = Hashie::Mash.new(response)
-      [r.access_token, r.expires_in, r.refresh_token]
+      response.values_at *%w(access_token expires_in refresh_token)
     end
 
     # Refresh an OAuth access token, given an OAuth refresh token.
@@ -99,8 +98,7 @@ module CreateSend
         :body => "grant_type=refresh_token&refresh_token=#{CGI.escape(refresh_token)}" }
       response = HTTParty.post(@@oauth_token_uri, options)
       check_response('Error refreshing access token', response)
-      r = Hashie::Mash.new(response)
-      [r.access_token, r.expires_in, r.refresh_token]
+      response.values_at *%w(access_token expires_in refresh_token)
     end
 
     def self.check_response(message, response)
