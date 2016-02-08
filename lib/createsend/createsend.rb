@@ -27,6 +27,19 @@ module CreateSend
     end
   end
 
+  class Response
+    attr_reader :access_token, :expires_in, :refresh_token
+
+    def self.from_hash(hash)
+      self.new *hash.values_at(*%w(access_token expires_in refresh_token))
+    end
+
+    def initialize(access_token, expires_in, refresh_token)
+      @access_token, @expires_in, @refresh_token =
+        access_token, expires_in, refresh_token
+    end
+  end
+
   # Raised for HTTP response codes of 400...500
   class ClientError < StandardError; end
   # Raised for HTTP response codes of 500...600
@@ -87,7 +100,7 @@ module CreateSend
     def self.exchange_token(client_id, client_secret, redirect_uri, code)
       response = request_token(client_id, client_secret, redirect_uri, code)
       check_response('Error exchanging code for access token', response)
-      response.values_at *%w(access_token expires_in refresh_token)
+      Response.from_hash response
     end
 
     # Refresh an OAuth access token, given an OAuth refresh token.
@@ -95,7 +108,7 @@ module CreateSend
     def self.refresh_access_token(refresh_token)
       response = request_access_token(refresh_token)
       check_response('Error refreshing access token', response)
-      response.values_at *%w(access_token expires_in refresh_token)
+      Response.from_hash response
     end
 
     def self.check_response(message, response)
@@ -156,12 +169,11 @@ module CreateSend
         raise '@auth_details[:refresh_token] does not contain a refresh token.'
       end
 
-      access_token, expires_in, refresh_token =
-        self.class.refresh_access_token @auth_details[:refresh_token]
+      response = self.class.refresh_access_token @auth_details[:refresh_token]
       auth({
-        :access_token => access_token,
-        :refresh_token => refresh_token})
-      [access_token, expires_in, refresh_token]
+        :access_token => response.access_token,
+        :refresh_token => response.refresh_token})
+      response
     end
 
     # Gets your clients.

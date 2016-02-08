@@ -50,13 +50,13 @@ class CreateSendTest < Test::Unit::TestCase
         :body => fixture_file("oauth_exchange_token.json"),
         :content_type => "application/json; charset=utf-8" }
       FakeWeb.register_uri(:post, "https://api.createsend.com/oauth/token", options)
-      access_token, expires_in, refresh_token = CreateSend::CreateSend.exchange_token(
+      response = CreateSend::CreateSend.exchange_token(
         client_id, client_secret, redirect_uri, code)
 
       FakeWeb.last_request.body.should == "client_id=8998879&client_secret=iou0q9wud0q9wd0q9wid0q9iwd0q9wid0q9wdqwd&code=jdiwouo8uowi9o9o&grant_type=authorization_code&redirect_uri=http%3A%2F%2Fexample.com%2Fauth"
-      access_token.should == "SlAV32hkKG"
-      expires_in.should == 1209600
-      refresh_token.should == "tGzv3JOkF0XG5Qx2TlKWIA"
+      response.access_token.should == "SlAV32hkKG"
+      response.expires_in.should == 1209600
+      response.refresh_token.should == "tGzv3JOkF0XG5Qx2TlKWIA"
     end
 
     should "raise an error when an attempt to exchange an OAuth token for an access token fails" do
@@ -80,12 +80,12 @@ class CreateSendTest < Test::Unit::TestCase
         :body => fixture_file("refresh_oauth_token.json"),
         :content_type => "application/json; charset=utf-8" }
       FakeWeb.register_uri(:post, "https://api.createsend.com/oauth/token", options)
-      new_access_token, new_expires_in, new_refresh_token = CreateSend::CreateSend.refresh_access_token refresh_token
+      response = CreateSend::CreateSend.refresh_access_token refresh_token
 
       FakeWeb.last_request.body.should == "grant_type=refresh_token&refresh_token=#{CGI.escape(refresh_token)}"
-      new_access_token.should == "SlAV32hkKG2e12e"
-      new_expires_in.should == 1209600
-      new_refresh_token.should == "tGzv3JOkF0XG5Qx2TlKWIA"
+      response.access_token.should == "SlAV32hkKG2e12e"
+      response.expires_in.should == 1209600
+      response.refresh_token.should == "tGzv3JOkF0XG5Qx2TlKWIA"
     end
 
     should "raise an error when an attempt to refresh an access token fails" do
@@ -118,15 +118,15 @@ class CreateSendTest < Test::Unit::TestCase
         :content_type => "application/json; charset=utf-8" }
       FakeWeb.register_uri(:post, "https://api.createsend.com/oauth/token", options)
       cs = CreateSend::CreateSend.new @auth
-      new_access_token, new_expires_in, new_refresh_token = cs.refresh_token
+      response = cs.refresh_token
 
       FakeWeb.last_request.body.should == "grant_type=refresh_token&refresh_token=#{CGI.escape(@auth[:refresh_token])}"
-      new_access_token.should == "SlAV32hkKG2e12e"
-      new_expires_in.should == 1209600
-      new_refresh_token.should == "tGzv3JOkF0XG5Qx2TlKWIA"
+      response.access_token.should == "SlAV32hkKG2e12e"
+      response.expires_in.should == 1209600
+      response.refresh_token.should == "tGzv3JOkF0XG5Qx2TlKWIA"
       cs.auth_details.should == {
-        :access_token => new_access_token,
-        :refresh_token => new_refresh_token
+        :access_token => response.access_token,
+        :refresh_token => response.refresh_token
       }
     end
 
