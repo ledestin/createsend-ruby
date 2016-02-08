@@ -107,7 +107,7 @@ module CreateSend
     end
     private_class_method :check_response
 
-    def request_access_token(refresh_token)
+    def self.request_access_token(refresh_token)
       body = {
         grant_type: 'refresh_token',
         refresh_token: refresh_token
