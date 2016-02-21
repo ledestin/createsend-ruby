@@ -130,7 +130,7 @@ module CreateSend
       def http_method(*names)
         names.each do |name|
           define_method(name) do |*args|
-            args = add_auth_details_to_options(args)
+            args[1] = add_auth_details_to_options(args[1])
             handle_response CreateSend.send(name, *args)
           end
           alias_method "cs_#{name}", name
@@ -267,10 +267,10 @@ module CreateSend
 
     http_method :get, :post, :put, :delete
 
-    def add_auth_details_to_options(args)
-      return args unless @auth_details
+    def add_auth_details_to_options(options)
+      return options unless @auth_details
 
-      options = args.size > 1 ? args[1] : {}
+      options ||= {}
       if @auth_details.has_key? :access_token
         options[:headers] = {
           "Authorization" => "Bearer #{@auth_details[:access_token]}" }
@@ -280,8 +280,7 @@ module CreateSend
             :username => @auth_details[:api_key], :password => 'x' }
         end
       end
-      args[1] = options
-      args
+      options
     end
 
     def handle_response(response) # :nodoc:
