@@ -112,11 +112,15 @@ module CreateSend
     end
 
     def self.check_response(response, message)
-      if response.has_key? 'error' and response.has_key? 'error_description'
-        raise format_response_error_message(response, message)
-      end
+      raise format_response_error_message(response, message) \
+        if bad_response?(response)
     end
     private_class_method :check_response
+
+    def self.bad_response?(response)
+      response.has_key? 'error' and response.has_key? 'error_description'
+    end
+    private_class_method :bad_response?
 
     def self.format_response_error_message(response, message)
       err = "#{message}: "
