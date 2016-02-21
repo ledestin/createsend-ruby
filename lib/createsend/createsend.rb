@@ -99,7 +99,7 @@ module CreateSend
     # value, and refresh token.
     def self.exchange_token(client_id, client_secret, redirect_uri, code)
       response = request_token(client_id, client_secret, redirect_uri, code)
-      check_response(response, 'Error exchanging code for access token')
+      fail_if_bad_response(response, 'Error exchanging code for access token')
       TokenResponse.from_hash response
     end
 
@@ -107,15 +107,15 @@ module CreateSend
     # Returns a new access token, 'expires in' value, and refresh token.
     def self.refresh_access_token(refresh_token)
       response = request_access_token(refresh_token)
-      check_response(response, 'Error refreshing access token')
+      fail_if_bad_response(response, 'Error refreshing access token')
       TokenResponse.from_hash response
     end
 
-    def self.check_response(response, message)
+    def self.fail_if_bad_response(response, message)
       raise format_response_error_message(response, message) \
         if bad_response?(response)
     end
-    private_class_method :check_response
+    private_class_method :fail_if_bad_response
 
     def self.bad_response?(response)
       response.has_key? 'error' and response.has_key? 'error_description'
