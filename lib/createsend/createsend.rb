@@ -99,7 +99,7 @@ module CreateSend
     # value, and refresh token.
     def self.exchange_token(client_id, client_secret, redirect_uri, code)
       response = request_token(client_id, client_secret, redirect_uri, code)
-      check_response('Error exchanging code for access token', response)
+      check_response(response, 'Error exchanging code for access token')
       TokenResponse.from_hash response
     end
 
@@ -107,11 +107,11 @@ module CreateSend
     # Returns a new access token, 'expires in' value, and refresh token.
     def self.refresh_access_token(refresh_token)
       response = request_access_token(refresh_token)
-      check_response('Error refreshing access token', response)
+      check_response(response, 'Error refreshing access token')
       TokenResponse.from_hash response
     end
 
-    def self.check_response(message, response)
+    def self.check_response(response, message)
       if response.has_key? 'error' and response.has_key? 'error_description'
         err = "#{message}: "
         err << "#{response['error']} - #{response['error_description']}"
