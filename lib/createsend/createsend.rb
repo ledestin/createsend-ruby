@@ -127,6 +127,16 @@ module CreateSend
           if bad_response?(response)
       end
 
+      def http_method(*names)
+        names.each do |name|
+          define_method(name) do |*args|
+            args = add_auth_details_to_options(args)
+            handle_response CreateSend.send(name, *args)
+          end
+          alias_method "cs_#{name}", name
+        end
+      end
+
       def bad_response?(response)
         response.has_key? 'error' and response.has_key? 'error_description'
       end
@@ -255,29 +265,7 @@ module CreateSend
       Hashie::Mash.new(response)
     end
 
-    def get(*args)
-      args = add_auth_details_to_options(args)
-      handle_response CreateSend.get(*args)
-    end
-    alias_method :cs_get, :get
-
-    def post(*args)
-      args = add_auth_details_to_options(args)
-      handle_response CreateSend.post(*args)
-    end
-    alias_method :cs_post, :post
-
-    def put(*args)
-      args = add_auth_details_to_options(args)
-      handle_response CreateSend.put(*args)
-    end
-    alias_method :cs_put, :put
-
-    def delete(*args)
-      args = add_auth_details_to_options(args)
-      handle_response CreateSend.delete(*args)
-    end
-    alias_method :cs_delete, :delete
+    http_method :get, :post, :put, :delete
 
     def add_auth_details_to_options(args)
       if @auth_details
