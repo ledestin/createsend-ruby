@@ -245,13 +245,13 @@ module CreateSend
     # Returns An object containing a single field SessionUrl which represents
     # the URL to initiate the external Campaign Monitor session.
     def external_session_url(email, chrome, url, integrator_id, client_id)
-      options = { :body => {
+      body = {
         :Email => email,
         :Chrome => chrome,
         :Url => url,
         :IntegratorID => integrator_id,
-        :ClientID => client_id }.to_json }
-      response = put("/externalsession.json", options)
+        :ClientID => client_id }.to_json
+      response = put("/externalsession.json", body: body)
       Hashie::Mash.new(response)
     end
 
