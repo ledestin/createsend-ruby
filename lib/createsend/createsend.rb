@@ -182,7 +182,7 @@ module CreateSend
     # Gets your clients.
     def clients
       response = get('/clients.json')
-      response.map{|item| Hashie::Mash.new(item)}
+      response.map { |item| Hashie::Mash.new(item) }
     end
 
     # Get your billing details.
