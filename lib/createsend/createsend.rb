@@ -127,7 +127,7 @@ module CreateSend
           if bad_response?(response)
       end
 
-      def http_method(*names)
+      def cs_method(*names)
         names.each do |name|
           define_method(name) do |*args|
             args[1] = add_auth_details_to_options(args[1])
@@ -265,7 +265,7 @@ module CreateSend
       Hashie::Mash.new(response)
     end
 
-    http_method :get, :post, :put, :delete
+    cs_method :get, :post, :put, :delete
 
     def add_auth_details_to_options(options)
       return options unless @auth_details
