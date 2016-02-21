@@ -268,22 +268,19 @@ module CreateSend
     http_method :get, :post, :put, :delete
 
     def add_auth_details_to_options(args)
-      if @auth_details
-        options = {}
-        if args.size > 1
-          options = args[1]
+      return args unless @auth_details
+
+      options = args.size > 1 ? args[1] : {}
+      if @auth_details.has_key? :access_token
+        options[:headers] = {
+          "Authorization" => "Bearer #{@auth_details[:access_token]}" }
+      elsif @auth_details.has_key? :api_key
+        if not options.has_key? :basic_auth
+          options[:basic_auth] = {
+            :username => @auth_details[:api_key], :password => 'x' }
         end
-        if @auth_details.has_key? :access_token
-          options[:headers] = {
-            "Authorization" => "Bearer #{@auth_details[:access_token]}" }
-        elsif @auth_details.has_key? :api_key
-          if not options.has_key? :basic_auth
-            options[:basic_auth] = {
-              :username => @auth_details[:api_key], :password => 'x' }
-          end
-        end
-        args[1] = options
       end
+      args[1] = options
       args
     end
 
