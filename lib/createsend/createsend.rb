@@ -150,8 +150,6 @@ module CreateSend
 
     def initialize(*args)
       return if args.empty?
-      fail ArgumentError, "Invalid number of arguments (0 or 1 expected)" \
-        if args.size > 1
 
       auth args.first # Expect auth details as first argument
     end
