@@ -113,12 +113,16 @@ module CreateSend
 
     def self.check_response(response, message)
       if response.has_key? 'error' and response.has_key? 'error_description'
-        err = "#{message}: "
-        err << "#{response['error']} - #{response['error_description']}"
-        raise err
+        raise format_response_error_message(response, message)
       end
     end
     private_class_method :check_response
+
+    def self.format_response_error_message(response, message)
+      err = "#{message}: "
+      err << "#{response['error']} - #{response['error_description']}"
+    end
+    private_class_method :format_response_error_message
 
     def self.request_access_token(refresh_token)
       body = {
