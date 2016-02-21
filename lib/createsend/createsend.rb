@@ -275,7 +275,7 @@ module CreateSend
         options[:headers] = {
           "Authorization" => "Bearer #{@auth_details[:access_token]}" }
       elsif @auth_details.has_key? :api_key
-        if not options.has_key? :basic_auth
+        unless options.has_key? :basic_auth
           options[:basic_auth] = {
             :username => @auth_details[:api_key], :password => 'x' }
         end
