@@ -149,9 +149,11 @@ module CreateSend
     end
 
     def initialize(*args)
-      if args.size > 0
-        auth args.first # Expect auth details as first argument
-      end
+      return if args.empty?
+      fail ArgumentError, "Invalid number of arguments (0 or 1 expected)" \
+        if args.size > 1
+
+      auth args.first # Expect auth details as first argument
     end
 
     @@base_uri = "https://api.createsend.com/api/v3.1"
