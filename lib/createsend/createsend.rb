@@ -111,43 +111,42 @@ module CreateSend
       TokenResponse.from_hash response
     end
 
-    def self.fail_if_bad_response(response, message)
-      raise format_response_error_message(response, message) \
-        if bad_response?(response)
-    end
-    private_class_method :fail_if_bad_response
+    class << self
+      private
 
-    def self.bad_response?(response)
-      response.has_key? 'error' and response.has_key? 'error_description'
-    end
-    private_class_method :bad_response?
+      def fail_if_bad_response(response, message)
+        raise format_response_error_message(response, message) \
+          if bad_response?(response)
+      end
 
-    def self.format_response_error_message(response, message)
-      err = "#{message}: "
-      err << "#{response['error']} - #{response['error_description']}"
-    end
-    private_class_method :format_response_error_message
+      def bad_response?(response)
+        response.has_key? 'error' and response.has_key? 'error_description'
+      end
 
-    def self.request_access_token(refresh_token)
-      body = {
-        grant_type: 'refresh_token',
-        refresh_token: refresh_token
-      }.to_query
-      HTTParty.post(@@oauth_token_uri, body: body)
-    end
-    private_class_method :request_access_token
+      def format_response_error_message(response, message)
+        err = "#{message}: "
+        err << "#{response['error']} - #{response['error_description']}"
+      end
 
-    def self.request_token(client_id, client_secret, redirect_uri, code)
-      body = {
-        grant_type: 'authorization_code',
-        client_id: client_id,
-        client_secret: client_secret,
-        redirect_uri: redirect_uri,
-        code: code
-      }.to_query
-      HTTParty.post(@@oauth_token_uri, {:body => body})
+      def request_access_token(refresh_token)
+        body = {
+          grant_type: 'refresh_token',
+          refresh_token: refresh_token
+        }.to_query
+        HTTParty.post(@@oauth_token_uri, body: body)
+      end
+
+      def request_token(client_id, client_secret, redirect_uri, code)
+        body = {
+          grant_type: 'authorization_code',
+          client_id: client_id,
+          client_secret: client_secret,
+          redirect_uri: redirect_uri,
+          code: code
+        }.to_query
+        HTTParty.post(@@oauth_token_uri, {:body => body})
+      end
     end
-    private_class_method :request_token
 
     def initialize(*args)
       if args.size > 0
