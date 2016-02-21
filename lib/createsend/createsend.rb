@@ -27,7 +27,7 @@ module CreateSend
     end
   end
 
-  class Response
+  class TokenResponse
     attr_reader :access_token, :expires_in, :refresh_token
 
     def self.from_hash(hash)
@@ -100,7 +100,7 @@ module CreateSend
     def self.exchange_token(client_id, client_secret, redirect_uri, code)
       response = request_token(client_id, client_secret, redirect_uri, code)
       check_response('Error exchanging code for access token', response)
-      Response.from_hash response
+      TokenResponse.from_hash response
     end
 
     # Refresh an OAuth access token, given an OAuth refresh token.
@@ -108,7 +108,7 @@ module CreateSend
     def self.refresh_access_token(refresh_token)
       response = request_access_token(refresh_token)
       check_response('Error refreshing access token', response)
-      Response.from_hash response
+      TokenResponse.from_hash response
     end
 
     def self.check_response(message, response)
