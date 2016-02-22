@@ -73,8 +73,6 @@ module CreateSend
     @@oauth_base_uri = "https://api.createsend.com/oauth"
     @@oauth_token_uri = "#{@@oauth_base_uri}/token"
 
-    attr_reader :auth_details
-
     # Specify cert authority file for cert validation
     ssl_ca_file cert_path
 
@@ -172,6 +170,8 @@ module CreateSend
         HTTParty.post(@@oauth_token_uri, {:body => body})
       end
     end
+
+    attr_reader :auth_details
 
     def initialize(*args)
       return if args.empty?
