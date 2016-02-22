@@ -27,19 +27,6 @@ module CreateSend
     end
   end
 
-  class TokenResponse
-    attr_reader :access_token, :expires_in, :refresh_token
-
-    def self.from_hash(hash)
-      self.new *hash.values_at(*%w(access_token expires_in refresh_token))
-    end
-
-    def initialize(access_token, expires_in, refresh_token)
-      @access_token, @expires_in, @refresh_token =
-        access_token, expires_in, refresh_token
-    end
-  end
-
   # Raised for HTTP response codes of 400...500
   class ClientError < StandardError; end
   # Raised for HTTP response codes of 500...600
@@ -60,6 +47,19 @@ module CreateSend
   # Raised for HTTP response code of 401, specifically when an OAuth token
   # has been revoked (Code: 122, Message: 'Revoked OAuth Token')
   class RevokedOAuthToken < Unauthorized; end
+
+  class TokenResponse
+    attr_reader :access_token, :expires_in, :refresh_token
+
+    def self.from_hash(hash)
+      self.new *hash.values_at(*%w(access_token expires_in refresh_token))
+    end
+
+    def initialize(access_token, expires_in, refresh_token)
+      @access_token, @expires_in, @refresh_token =
+        access_token, expires_in, refresh_token
+    end
+  end
 
   # Provides high level CreateSend functionality/data you'll probably need.
   class CreateSend
