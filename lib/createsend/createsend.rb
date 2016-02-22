@@ -12,6 +12,7 @@ module CreateSend
   # Represents a CreateSend API error. Contains specific data about the error.
   class CreateSendError < StandardError
     attr_reader :data
+
     def initialize(data)
       @data = data
       super format_data_as_message
