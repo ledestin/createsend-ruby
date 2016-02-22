@@ -128,13 +128,15 @@ module CreateSend
       end
 
       def cs_method(*names)
-        names.each do |name|
-          define_method(name) do |*args|
-            args[1] = add_auth_details_to_options(args[1])
-            handle_response CreateSend.send(name, *args)
-          end
-          alias_method "cs_#{name}", name
+        names.each { |name| define_cs_method name }
+      end
+
+      def define_cs_method(name)
+        define_method(name) do |*args|
+          args[1] = add_auth_details_to_options(args[1])
+          handle_response CreateSend.send(name, *args)
         end
+        alias_method "cs_#{name}", name
       end
 
       def bad_response?(response)
