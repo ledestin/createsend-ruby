@@ -125,10 +125,6 @@ module CreateSend
     class << self
       private
 
-      def bad_response?(response)
-        response.has_key? 'error' and response.has_key? 'error_description'
-      end
-
       def cs_method(*names)
         names.each { |name| define_cs_method name }
       end
@@ -143,12 +139,16 @@ module CreateSend
 
       def fail_if_bad_response(response, message)
         raise format_response_error_message(response, message) \
-          if bad_response?(response)
+          if has_error?(response)
       end
 
       def format_response_error_message(response, message)
         err = "#{message}: "
         err << "#{response['error']} - #{response['error_description']}"
+      end
+
+      def has_error?(response)
+        response.has_key? 'error' and response.has_key? 'error_description'
       end
 
       def request_access_token(refresh_token)
