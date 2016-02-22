@@ -68,6 +68,7 @@ module CreateSend
   class CreateSend
     extend Certificate
     include HTTParty
+
     attr_reader :auth_details
 
     # Specify cert authority file for cert validation
