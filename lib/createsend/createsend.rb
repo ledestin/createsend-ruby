@@ -139,7 +139,7 @@ module CreateSend
 
       def fail_if_bad_response(response, message)
         raise format_response_error_message(response, message) \
-          if has_error?(response)
+          if failed_response?(response)
       end
 
       def format_response_error_message(response, message)
@@ -147,7 +147,7 @@ module CreateSend
         err << "#{response['error']} - #{response['error_description']}"
       end
 
-      def has_error?(response)
+      def failed_response?(response)
         response.has_key? 'error' and response.has_key? 'error_description'
       end
 
