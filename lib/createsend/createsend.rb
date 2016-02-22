@@ -52,7 +52,7 @@ module CreateSend
   class TokenResponse
     TOKEN_ATTRS = %w(access_token expires_in refresh_token)
 
-    attr_reader :access_token, :expires_in, :refresh_token
+    attr_reader *TOKEN_ATTRS
 
     def self.from_hash(hash)
       self.new *hash.values_at(*TOKEN_ATTRS)
