@@ -50,10 +50,12 @@ module CreateSend
   class RevokedOAuthToken < Unauthorized; end
 
   class TokenResponse
+    TOKEN_ATTRS = %w(access_token expires_in refresh_token)
+
     attr_reader :access_token, :expires_in, :refresh_token
 
     def self.from_hash(hash)
-      self.new *hash.values_at(*%w(access_token expires_in refresh_token))
+      self.new *hash.values_at(*TOKEN_ATTRS)
     end
 
     def initialize(access_token, expires_in, refresh_token)
