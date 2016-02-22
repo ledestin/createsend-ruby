@@ -125,9 +125,8 @@ module CreateSend
     class << self
       private
 
-      def fail_if_bad_response(response, message)
-        raise format_response_error_message(response, message) \
-          if bad_response?(response)
+      def bad_response?(response)
+        response.has_key? 'error' and response.has_key? 'error_description'
       end
 
       def cs_method(*names)
@@ -142,8 +141,9 @@ module CreateSend
         alias_method "cs_#{name}", name
       end
 
-      def bad_response?(response)
-        response.has_key? 'error' and response.has_key? 'error_description'
+      def fail_if_bad_response(response, message)
+        raise format_response_error_message(response, message) \
+          if bad_response?(response)
       end
 
       def format_response_error_message(response, message)
