@@ -11,11 +11,18 @@ module CreateSend
   # Represents a CreateSend API error. Contains specific data about the error.
   class CreateSendError < StandardError
     attr_reader :data
+
     def initialize(data)
       @data = data
+      super format_data_as_message
+    end
+
+    private
+
+    def format_data_as_message
       # @data should contain Code, Message and optionally ResultData
       extra = @data.ResultData ? "\nExtra result data: #{@data.ResultData}" : ""
-      super "The CreateSend API responded with the following error"\
+      "The CreateSend API responded with the following error"\
         " - #{@data.Code}: #{@data.Message}#{extra}"
     end
   end
