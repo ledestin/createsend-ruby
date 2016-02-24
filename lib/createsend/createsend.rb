@@ -9,7 +9,7 @@ module CreateSend
   USER_AGENT_STRING = "createsend-ruby-#{VERSION}-#{RUBY_VERSION}-p#{RUBY_PATCHLEVEL}-#{RUBY_PLATFORM}"
 
   # Represents a CreateSend API error. Contains specific data about the error.
-  class CreateSendError < StandardError
+  class Error < StandardError
     attr_reader :data
 
     def initialize(data)
@@ -32,9 +32,9 @@ module CreateSend
   # Raised for HTTP response codes of 500...600
   class ServerError < StandardError; end
   # Raised for HTTP response code of 400
-  class BadRequest < CreateSendError; end
+  class BadRequest < Error; end
   # Raised for HTTP response code of 401
-  class Unauthorized < CreateSendError; end
+  class Unauthorized < Error; end
   # Raised for HTTP response code of 404
   class NotFound < ClientError; end
 
