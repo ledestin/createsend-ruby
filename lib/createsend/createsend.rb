@@ -20,9 +20,10 @@ module CreateSend
     private
 
     def format_data_as_message
-      extra = "\nExtra result data: #{@data.ResultData}" if @data.ResultData
+      formatted_result_data = "\nExtra result data: #{@data.ResultData}" \
+        if @data.ResultData
       "The CreateSend API responded with the following error"\
-        " - #{@data.Code}: #{@data.Message}#{extra}"
+        " - #{@data.Code}: #{@data.Message}#{formatted_result_data}"
     end
   end
 
