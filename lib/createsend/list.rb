@@ -1,6 +1,6 @@
 module CreateSend
   # Represents a subscriber list and associated functionality.
-  class List < CreateSend
+  class List < Base
     attr_reader :list_id
 
     def initialize(auth, list_id)
@@ -29,7 +29,7 @@ module CreateSend
         :ConfirmedOptIn => confirmed_opt_in,
         :ConfirmationSuccessPage => confirmation_success_page,
         :UnsubscribeSetting => unsubscribe_setting }.to_json }
-      cs = CreateSend.new auth
+      cs = Base.new auth
       response = cs.post "/lists/#{client_id}.json", options
       response.parsed_response
     end

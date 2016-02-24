@@ -1,6 +1,6 @@
 module CreateSend
   # Represents a client and associated functionality.
-  class Client < CreateSend
+  class Client < Base
     attr_reader :client_id
 
     def initialize(auth, client_id)
@@ -14,7 +14,7 @@ module CreateSend
         :CompanyName => company,
         :TimeZone => timezone,
         :Country => country }.to_json }
-      cs = CreateSend.new auth
+      cs = Base.new auth
       cs.post "/clients.json", options
     end
 

@@ -1,6 +1,6 @@
 module CreateSend
   # Represents a person and associated functionality.
-  class Person < CreateSend
+  class Person < Base
     attr_reader :client_id
     attr_reader :email_address
 
@@ -13,7 +13,7 @@ module CreateSend
     # Gets a person by client ID and email address.
     def self.get(auth, client_id, email_address)
       options = { :query => { :email => email_address } }
-      cs = CreateSend.new auth
+      cs = Base.new auth
       response = cs.get "/clients/#{client_id}/people.json", options
       Hashie::Mash.new(response)
     end
@@ -26,7 +26,7 @@ module CreateSend
         :Name => name,
         :AccessLevel => access_level,
         :Password => password }.to_json }
-      cs = CreateSend.new auth
+      cs = Base.new auth
       response = cs.post "/clients/#{client_id}/people.json", options
       Hashie::Mash.new(response)
     end

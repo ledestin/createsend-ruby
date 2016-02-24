@@ -1,10 +1,10 @@
 module CreateSend
   module Transactional
-    class SmartEmail < CreateSend
+    class SmartEmail < Base
       attr_reader :smart_email_id
 
       def self.list(auth, options = nil)
-        cs = CreateSend.new auth
+        cs = Base.new auth
         response = cs.get "/transactional/smartemail", :query => options
         response.map{|item| Hashie::Mash.new(item)}
       end

@@ -1,6 +1,6 @@
 module CreateSend
   module Transactional
-    class Timeline < CreateSend
+    class Timeline < Base
       attr_reader :client_id
 
       def initialize(auth, client_id = nil)

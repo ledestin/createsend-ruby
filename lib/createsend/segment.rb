@@ -1,6 +1,6 @@
 module CreateSend
   # Represents a subscriber list segment and associated functionality.
-  class Segment < CreateSend
+  class Segment < Base
     attr_reader :segment_id
 
     def initialize(auth, segment_id)
@@ -13,7 +13,7 @@ module CreateSend
       options = { :body => {
         :Title => title,
         :RuleGroups => rule_groups }.to_json }
-      cs = CreateSend.new auth
+      cs = Base.new auth
       response = cs.post "/segments/#{list_id}.json", options
       response.parsed_response
     end

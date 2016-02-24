@@ -1,6 +1,6 @@
 module CreateSend
   # Represents an administrator and associated functionality.
-  class Administrator < CreateSend
+  class Administrator < Base
     attr_reader :email_address
 
     def initialize(auth, email_address)
@@ -11,7 +11,7 @@ module CreateSend
     # Gets an administrator by email address.
     def self.get(auth, email_address)
       options = { :query => { :email => email_address } }
-      cs = CreateSend.new auth
+      cs = Base.new auth
       response = cs.cs_get "/admins.json", options
       Hashie::Mash.new(response)
     end
@@ -22,7 +22,7 @@ module CreateSend
         :EmailAddress => email_address,
         :Name => name
       }.to_json }
-      cs = CreateSend.new auth
+      cs = Base.new auth
       response = cs.cs_post "/admins.json", options
       Hashie::Mash.new(response)
     end

@@ -1,6 +1,6 @@
 module CreateSend
   module Transactional
-    class ClassicEmail < CreateSend
+    class ClassicEmail < Base
       attr_accessor :options
 
       def initialize(auth, client_id = nil)

@@ -1,6 +1,6 @@
 module CreateSend
   # Represents a campaign and provides associated funtionality.
-  class Campaign < CreateSend
+  class Campaign < Base
     attr_reader :campaign_id
 
     def initialize(auth, campaign_id)
@@ -36,7 +36,7 @@ module CreateSend
         :TextUrl => text_url,
         :ListIDs => list_ids,
         :SegmentIDs => segment_ids }.to_json }
-      cs = CreateSend.new auth
+      cs = Base.new auth
       response = cs.post "/campaigns/#{client_id}.json", options
       response.parsed_response
     end
@@ -72,7 +72,7 @@ module CreateSend
         :SegmentIDs => segment_ids,
         :TemplateID => template_id,
         :TemplateContent => template_content }.to_json }
-      cs = CreateSend.new auth
+      cs = Base.new auth
       response = cs.post(
         "/campaigns/#{client_id}/fromtemplate.json", options)
       response.parsed_response

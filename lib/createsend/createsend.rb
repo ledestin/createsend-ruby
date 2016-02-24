@@ -49,7 +49,7 @@ module CreateSend
   class RevokedOAuthToken < Unauthorized; end
 
   # Provides high level CreateSend functionality/data you'll probably need.
-  class CreateSend
+  class Base
     include HTTParty
     attr_reader :auth_details
 
@@ -139,7 +139,7 @@ module CreateSend
       end
 
       access_token, expires_in, refresh_token =
-        self.class.refresh_access_token @auth_details[:refresh_token]
+        Base.refresh_access_token @auth_details[:refresh_token]
       auth({
         :access_token => access_token,
         :refresh_token => refresh_token})
@@ -224,25 +224,25 @@ module CreateSend
 
     def get(*args)
       args = add_auth_details_to_options(args)
-      handle_response CreateSend.get(*args)
+      handle_response Base.get(*args)
     end
     alias_method :cs_get, :get
 
     def post(*args)
       args = add_auth_details_to_options(args)
-      handle_response CreateSend.post(*args)
+      handle_response Base.post(*args)
     end
     alias_method :cs_post, :post
 
     def put(*args)
       args = add_auth_details_to_options(args)
-      handle_response CreateSend.put(*args)
+      handle_response Base.put(*args)
     end
     alias_method :cs_put, :put
 
     def delete(*args)
       args = add_auth_details_to_options(args)
-      handle_response CreateSend.delete(*args)
+      handle_response Base.delete(*args)
     end
     alias_method :cs_delete, :delete
 

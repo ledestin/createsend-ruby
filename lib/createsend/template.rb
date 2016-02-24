@@ -1,6 +1,6 @@
 module CreateSend
   # Represents an email template and associated functionality.
-  class Template < CreateSend
+  class Template < Base
     attr_reader :template_id
 
     def initialize(auth, template_id)
@@ -14,7 +14,7 @@ module CreateSend
         :Name => name,
         :HtmlPageURL => html_url,
         :ZipFileURL => zip_url }.to_json }
-      cs = CreateSend.new auth
+      cs = Base.new auth
       response = cs.post "/templates/#{client_id}.json", options
       response.parsed_response
     end

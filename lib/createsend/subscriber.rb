@@ -1,6 +1,6 @@
 module CreateSend
   # Represents a subscriber and associated functionality.
-  class Subscriber < CreateSend
+  class Subscriber < Base
     attr_reader :list_id
     attr_reader :email_address
 
@@ -13,7 +13,7 @@ module CreateSend
     # Gets a subscriber by list ID and email address.
     def self.get(auth, list_id, email_address)
       options = { :query => { :email => email_address } }
-      cs = CreateSend.new auth
+      cs = Base.new auth
       response = cs.get "/subscribers/#{list_id}.json", options
       Hashie::Mash.new(response)
     end
@@ -28,7 +28,7 @@ module CreateSend
         :Resubscribe => resubscribe,
         :RestartSubscriptionBasedAutoresponders =>
           restart_subscription_based_autoresponders }.to_json }
-      cs = CreateSend.new auth
+      cs = Base.new auth
       response = cs.post "/subscribers/#{list_id}.json", options
       response.parsed_response
     end
@@ -45,7 +45,7 @@ module CreateSend
         :RestartSubscriptionBasedAutoresponders =>
           restart_subscription_based_autoresponders }.to_json }
       begin
-        cs = CreateSend.new auth
+        cs = Base.new auth
         response = cs.post(
           "/subscribers/#{list_id}/import.json", options)
       rescue BadRequest => br
