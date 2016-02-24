@@ -59,7 +59,7 @@ module CreateSend
     ssl_ca_file cert_path('cacert.pem')
 
     # Set a custom user agent string to be used when instances of
-    # CreateSend::CreateSend make API calls.
+    # CreateSend::Base make API calls.
     #
     # user_agent - The user agent string to use in the User-Agent header when
     #              instances of this class make API calls. If set to nil, the
