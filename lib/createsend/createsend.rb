@@ -71,6 +71,7 @@ module CreateSend
     def self.default_user_agent
       user_agent USER_AGENT_STRING
     end
+
     # Get the authorization URL for your application, given the application's
     # client_id, redirect_uri, scope, and optional state data.
     def self.authorize_url(client_id, redirect_uri, scope, state=nil)
