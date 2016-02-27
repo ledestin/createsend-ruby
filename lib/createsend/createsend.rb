@@ -62,12 +62,15 @@ module CreateSend
     # CreateSend::Base make API calls.
     #
     # user_agent - The user agent string to use in the User-Agent header when
-    #              instances of this class make API calls. If set to nil, the
-    #              default value of CreateSend::USER_AGENT_STRING will be used.
+    #              instances of this class make API calls.
     def self.user_agent(user_agent)
-      headers({'User-Agent' => user_agent || USER_AGENT_STRING})
+      headers('User-Agent' => user_agent)
     end
 
+    # Set user agent to be CreateSend.
+    def self.default_user_agent
+      user_agent USER_AGENT_STRING
+    end
     # Get the authorization URL for your application, given the application's
     # client_id, redirect_uri, scope, and optional state data.
     def self.authorize_url(client_id, redirect_uri, scope, state=nil)

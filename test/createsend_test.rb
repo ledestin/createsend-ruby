@@ -198,7 +198,7 @@ class CreateSendTest < Test::Unit::TestCase
       stub_get(@auth, "clients.json", "clients.json")
       clients = @cs.clients
       clients.size.should == 2
-      CreateSend::Base.user_agent nil
+      CreateSend::Base.default_user_agent
     end
 
     should "get all clients" do
