@@ -28,7 +28,7 @@ class CreateSendTest < Test::Unit::TestCase
       client_id = 8998879
       redirect_uri = 'http://example.com/auth'
       scope = 'ViewReports,CreateCampaigns,SendCampaigns'
-      url = CreateSend::Base.authorize_url(client_id, redirect_uri, scope)
+      url = CreateSend::Base.construct_authorization_url(client_id, redirect_uri, scope)
       url.should == "https://api.createsend.com/oauth?client_id=8998879&redirect_uri=http%3A%2F%2Fexample.com%2Fauth&scope=ViewReports%2CCreateCampaigns%2CSendCampaigns"
     end
 
@@ -37,7 +37,7 @@ class CreateSendTest < Test::Unit::TestCase
       redirect_uri = 'http://example.com/auth'
       scope = 'ViewReports,CreateCampaigns,SendCampaigns'
       state = 89879287
-      url = CreateSend::Base.authorize_url(client_id, redirect_uri, scope, state)
+      url = CreateSend::Base.construct_authorization_url(client_id, redirect_uri, scope, state)
       url.should == "https://api.createsend.com/oauth?client_id=8998879&redirect_uri=http%3A%2F%2Fexample.com%2Fauth&scope=ViewReports%2CCreateCampaigns%2CSendCampaigns&state=89879287"
     end
 
