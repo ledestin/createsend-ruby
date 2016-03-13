@@ -49,6 +49,21 @@ module CreateSend
   # has been revoked (Code: 122, Message: 'Revoked OAuth Token')
   class RevokedOAuthToken < Unauthorized; end
 
+  class TokenResponse
+    ATTRS = %w[access_token expires_in refresh_token]
+
+    attr_reader *ATTRS
+
+    def self.from_hash(hash)
+      self.new *hash.values_at(*ATTRS)
+    end
+
+    def initialize(access_token, expires_in, refresh_token)
+      @access_token, @expires_in, @refresh_token =
+        access_token, expires_in, refresh_token
+    end
+  end
+
   # Provides high level CreateSend functionality/data you'll probably need.
   class Base
     include HTTParty
@@ -88,8 +103,7 @@ module CreateSend
       response = request_token(client_id, client_secret, redirect_uri, code)
       fail_on_erroneous_response(response,
                                  "Error exchanging code for access token")
-      r = Hashie::Mash.new(response)
-      [r.access_token, r.expires_in, r.refresh_token]
+      TokenResponse.from_hash(response)
     end
 
     # Refresh an OAuth access token, given an OAuth refresh token.
