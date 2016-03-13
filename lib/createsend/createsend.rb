@@ -92,8 +92,7 @@ module CreateSend
           redirect_uri: redirect_uri,
           code: code
       }.to_query
-      options = {:body => body}
-      response = HTTParty.post(@@oauth_token_uri, options)
+      response = HTTParty.post(@@oauth_token_uri, body: body)
       if response.has_key? 'error' and response.has_key? 'error_description'
         err = "Error exchanging code for access token: "
         err << "#{response['error']} - #{response['error_description']}"
