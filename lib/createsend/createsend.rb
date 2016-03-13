@@ -111,11 +111,12 @@ module CreateSend
       private
 
       def fail_on_erroneous_response(response, message)
-        if response.has_key? 'error' and response.has_key? 'error_description'
-          err = "#{message}: "
-          err << "#{response['error']} - #{response['error_description']}"
-          raise err
-        end
+        return unless response.has_key?('error') &&
+          response.has_key?('error_description')
+
+        full_error_message = "#{message}: " <<
+          "#{response['error']} - #{response['error_description']}"
+        raise full_error_message
       end
 
       def request_token(client_id, client_secret, redirect_uri, code)
