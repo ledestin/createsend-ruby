@@ -85,11 +85,13 @@ module CreateSend
     # Exchange a provided OAuth code for an OAuth access token, 'expires in'
     # value, and refresh token.
     def self.exchange_token(client_id, client_secret, redirect_uri, code)
-      body = "grant_type=authorization_code"
-      body << "&client_id=#{CGI.escape(client_id.to_s)}"
-      body << "&client_secret=#{CGI.escape(client_secret.to_s)}"
-      body << "&redirect_uri=#{CGI.escape(redirect_uri.to_s)}"
-      body << "&code=#{CGI.escape(code.to_s)}"
+      body = {
+          grant_type: 'authorization_code',
+          client_id: client_id,
+          client_secret: client_secret,
+          redirect_uri: redirect_uri,
+          code: code
+      }.to_query
       options = {:body => body}
       response = HTTParty.post(@@oauth_token_uri, options)
       if response.has_key? 'error' and response.has_key? 'error_description'
