@@ -85,19 +85,9 @@ module CreateSend
     # Exchange a provided OAuth code for an OAuth access token, 'expires in'
     # value, and refresh token.
     def self.exchange_token(client_id, client_secret, redirect_uri, code)
-      body = {
-          grant_type: 'authorization_code',
-          client_id: client_id,
-          client_secret: client_secret,
-          redirect_uri: redirect_uri,
-          code: code
-      }.to_query
-      response = HTTParty.post(@@oauth_token_uri, body: body)
-      if response.has_key? 'error' and response.has_key? 'error_description'
-        err = "Error exchanging code for access token: "
-        err << "#{response['error']} - #{response['error_description']}"
-        raise err
-      end
+      response = request_token(client_id, client_secret, redirect_uri, code)
+      fail_on_erroneous_response(response,
+                                 "Error exchanging code for access token")
       r = Hashie::Mash.new(response)
       [r.access_token, r.expires_in, r.refresh_token]
     end
@@ -115,6 +105,29 @@ module CreateSend
       end
       r = Hashie::Mash.new(response)
       [r.access_token, r.expires_in, r.refresh_token]
+    end
+
+    class << self
+      private
+
+      def fail_on_erroneous_response(response, message)
+        if response.has_key? 'error' and response.has_key? 'error_description'
+          err = "#{message}: "
+          err << "#{response['error']} - #{response['error_description']}"
+          raise err
+        end
+      end
+
+      def request_token(client_id, client_secret, redirect_uri, code)
+        body = {
+            grant_type: 'authorization_code',
+            client_id: client_id,
+            client_secret: client_secret,
+            redirect_uri: redirect_uri,
+            code: code
+        }.to_query
+        HTTParty.post(@@oauth_token_uri, body: body)
+      end
     end
 
     def initialize(*args)
