@@ -109,16 +109,9 @@ module CreateSend
     # Refresh an OAuth access token, given an OAuth refresh token.
     # Returns a new access token, 'expires in' value, and refresh token.
     def self.refresh_access_token(refresh_token)
-      options = {
-        :body => "grant_type=refresh_token&refresh_token=#{CGI.escape(refresh_token)}" }
-      response = HTTParty.post(@@oauth_token_uri, options)
-      if response.has_key? 'error' and response.has_key? 'error_description'
-        err = "Error refreshing access token: "
-        err << "#{response['error']} - #{response['error_description']}"
-        raise err
-      end
-      r = Hashie::Mash.new(response)
-      [r.access_token, r.expires_in, r.refresh_token]
+      response = request_access_token(refresh_token)
+      fail_on_erroneous_response(response, 'Error refreshing access token')
+      TokenResponse.from_hash response
     end
 
     class << self
@@ -136,6 +129,14 @@ module CreateSend
 
       def format_response_error_message(response, message)
         "#{message}: #{response['error']} - #{response['error_description']}"
+      end
+
+      def request_access_token(refresh_token)
+        body = {
+          grant_type: 'refresh_token',
+          refresh_token: refresh_token
+        }.to_query
+        HTTParty.post(@@oauth_token_uri, body: body)
       end
 
       def request_token(client_id, client_secret, redirect_uri, code)
@@ -178,12 +179,11 @@ module CreateSend
         raise '@auth_details[:refresh_token] does not contain a refresh token.'
       end
 
-      access_token, expires_in, refresh_token =
-        Base.refresh_access_token @auth_details[:refresh_token]
+      tokens = Base.refresh_access_token @auth_details[:refresh_token]
       auth({
-        :access_token => access_token,
-        :refresh_token => refresh_token})
-      [access_token, expires_in, refresh_token]
+        :access_token => tokens.access_token,
+        :refresh_token => tokens.refresh_token})
+      tokens
     end
 
     # Gets your clients.

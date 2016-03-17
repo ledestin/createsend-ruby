@@ -80,12 +80,12 @@ class CreateSendTest < Test::Unit::TestCase
         :body => fixture_file("refresh_oauth_token.json"),
         :content_type => "application/json; charset=utf-8" }
       FakeWeb.register_uri(:post, "https://api.createsend.com/oauth/token", options)
-      new_access_token, new_expires_in, new_refresh_token = CreateSend::Base.refresh_access_token refresh_token
+      response = CreateSend::Base.refresh_access_token refresh_token
 
       FakeWeb.last_request.body.should == "grant_type=refresh_token&refresh_token=#{CGI.escape(refresh_token)}"
-      new_access_token.should == "SlAV32hkKG2e12e"
-      new_expires_in.should == 1209600
-      new_refresh_token.should == "tGzv3JOkF0XG5Qx2TlKWIA"
+      response.access_token.should == "SlAV32hkKG2e12e"
+      response.expires_in.should == 1209600
+      response.refresh_token.should == "tGzv3JOkF0XG5Qx2TlKWIA"
     end
 
     should "raise an error when an attempt to refresh an access token fails" do
@@ -94,7 +94,7 @@ class CreateSendTest < Test::Unit::TestCase
         :body => fixture_file("oauth_refresh_token_error.json"),
         :content_type => "application/json; charset=utf-8" }
       FakeWeb.register_uri(:post, "https://api.createsend.com/oauth/token", options)
-      lambda { access_token, expires_in, refresh_token = CreateSend::Base.refresh_access_token(
+      lambda { CreateSend::Base.refresh_access_token(
         refresh_token) }.should raise_error(
           Exception, 'Error refreshing access token: invalid_grant - Specified refresh_token was invalid or expired')
       FakeWeb.last_request.body.should == "grant_type=refresh_token&refresh_token=#{CGI.escape(refresh_token)}"
@@ -118,15 +118,15 @@ class CreateSendTest < Test::Unit::TestCase
         :content_type => "application/json; charset=utf-8" }
       FakeWeb.register_uri(:post, "https://api.createsend.com/oauth/token", options)
       cs = CreateSend::Base.new @auth
-      new_access_token, new_expires_in, new_refresh_token = cs.refresh_token
+      tokens = cs.refresh_token
 
       FakeWeb.last_request.body.should == "grant_type=refresh_token&refresh_token=#{CGI.escape(@auth[:refresh_token])}"
-      new_access_token.should == "SlAV32hkKG2e12e"
-      new_expires_in.should == 1209600
-      new_refresh_token.should == "tGzv3JOkF0XG5Qx2TlKWIA"
+      tokens.access_token.should == "SlAV32hkKG2e12e"
+      tokens.expires_in.should == 1209600
+      tokens.refresh_token.should == "tGzv3JOkF0XG5Qx2TlKWIA"
       cs.auth_details.should == {
-        :access_token => new_access_token,
-        :refresh_token => new_refresh_token
+        :access_token => tokens.access_token,
+        :refresh_token => tokens.refresh_token
       }
     end
 
