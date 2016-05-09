@@ -152,7 +152,7 @@ module CreateSend
     end
 
     def initialize(new_auth = nil)
-      auth new_auth if new_auth
+      @auth_details = new_auth if new_auth
     end
 
     @@base_uri = "https://api.createsend.com/api/v3.1"
@@ -164,10 +164,8 @@ module CreateSend
       'Accept-Encoding' => 'gzip, deflate' })
     base_uri @@base_uri
 
-    # Authenticate using either OAuth or an API key.
-    def auth(auth_details)
-      @auth_details = auth_details
-    end
+    # Holds either OAuth or an API key.
+    attr_accessor :auth_details
 
     # Refresh the current OAuth token using the current refresh token.
     def refresh_token
@@ -178,9 +176,9 @@ module CreateSend
       end
 
       tokens = Base.refresh_access_token @auth_details[:refresh_token]
-      auth({
+      @auth_details = {
         :access_token => tokens.access_token,
-        :refresh_token => tokens.refresh_token})
+        :refresh_token => tokens.refresh_token}
       tokens
     end
 
