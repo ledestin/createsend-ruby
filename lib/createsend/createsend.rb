@@ -169,11 +169,8 @@ module CreateSend
 
     # Refresh the current OAuth token using the current refresh token.
     def refresh_token
-      if not @auth_details or
-        not @auth_details.has_key? :refresh_token or
-        not @auth_details[:refresh_token]
-        raise '@auth_details[:refresh_token] does not contain a refresh token.'
-      end
+      raise '@auth_details[:refresh_token] does not contain a refresh token.' \
+        unless @auth_details && @auth_details[:refresh_token]
 
       tokens = Base.refresh_access_token @auth_details[:refresh_token]
       @auth_details = {
