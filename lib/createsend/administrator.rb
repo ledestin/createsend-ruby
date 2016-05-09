@@ -5,7 +5,7 @@ module CreateSend
 
     def initialize(auth, email_address)
       @email_address = email_address
-      super
+      super auth
     end
 
     # Gets an administrator by email address.

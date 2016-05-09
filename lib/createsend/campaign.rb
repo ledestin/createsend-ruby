@@ -5,7 +5,7 @@ module CreateSend
 
     def initialize(auth, campaign_id)
       @campaign_id = campaign_id
-      super
+      super auth
     end
 
     # Creates a new campaign for a client.

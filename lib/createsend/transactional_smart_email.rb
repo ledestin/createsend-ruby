@@ -12,7 +12,7 @@ module CreateSend
       def initialize(auth, smart_email_id)
         @auth = auth
         @smart_email_id = smart_email_id
-        super
+        super auth
       end
 
       def details

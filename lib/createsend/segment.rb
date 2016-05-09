@@ -5,7 +5,7 @@ module CreateSend
 
     def initialize(auth, segment_id)
       @segment_id = segment_id
-      super
+      super auth
     end
 
     # Creates a new segment.

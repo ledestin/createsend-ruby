@@ -7,7 +7,7 @@ module CreateSend
     def initialize(auth, client_id, email_address)
       @client_id = client_id
       @email_address = email_address
-      super
+      super auth
     end
 
     # Gets a person by client ID and email address.

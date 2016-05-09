@@ -7,7 +7,7 @@ module CreateSend
     def initialize(auth, list_id, email_address)
       @list_id = list_id
       @email_address = email_address
-      super
+      super auth
     end
 
     # Gets a subscriber by list ID and email address.

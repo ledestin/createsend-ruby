@@ -151,10 +151,8 @@ module CreateSend
       end
     end
 
-    def initialize(*args)
-      if args.size > 0
-        auth args.first # Expect auth details as first argument
-      end
+    def initialize(new_auth = nil)
+      auth new_auth if new_auth
     end
 
     @@base_uri = "https://api.createsend.com/api/v3.1"

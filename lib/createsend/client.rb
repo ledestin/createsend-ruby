@@ -5,7 +5,7 @@ module CreateSend
 
     def initialize(auth, client_id)
       @client_id = client_id
-      super
+      super auth
     end
 
     # Creates a client.

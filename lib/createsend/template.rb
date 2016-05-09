@@ -5,7 +5,7 @@ module CreateSend
 
     def initialize(auth, template_id)
       @template_id = template_id
-      super
+      super auth
     end
 
     # Creates a new email template.

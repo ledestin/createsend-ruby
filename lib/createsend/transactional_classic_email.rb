@@ -6,7 +6,7 @@ module CreateSend
       def initialize(auth, client_id = nil)
         @auth = auth
         @client_id = client_id
-        super
+        super auth
       end
 
       def send(options)

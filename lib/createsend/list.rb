@@ -5,7 +5,7 @@ module CreateSend
 
     def initialize(auth, list_id)
       @list_id = list_id
-      super
+      super auth
     end
 
     # Creates a new list for a client.
