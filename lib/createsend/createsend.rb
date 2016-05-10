@@ -117,6 +117,18 @@ module CreateSend
     class << self
       private
 
+      def cs_method(*names)
+        names.each { |name| define_cs_method name }
+      end
+
+      def define_cs_method(name)
+        define_method(name) do |*args|
+          args = add_auth_details_to_options(args)
+          handle_response Base.send(name, *args)
+        end
+        alias_method "cs_#{name}", name
+      end
+
       def fail_on_erroneous_response(response, message)
         return unless erroneous?(response)
 
@@ -255,29 +267,7 @@ module CreateSend
       Hashie::Mash.new(response)
     end
 
-    def get(*args)
-      args = add_auth_details_to_options(args)
-      handle_response Base.get(*args)
-    end
-    alias_method :cs_get, :get
-
-    def post(*args)
-      args = add_auth_details_to_options(args)
-      handle_response Base.post(*args)
-    end
-    alias_method :cs_post, :post
-
-    def put(*args)
-      args = add_auth_details_to_options(args)
-      handle_response Base.put(*args)
-    end
-    alias_method :cs_put, :put
-
-    def delete(*args)
-      args = add_auth_details_to_options(args)
-      handle_response Base.delete(*args)
-    end
-    alias_method :cs_delete, :delete
+    cs_method :get, :post, :put, :delete
 
     def add_auth_details_to_options(args)
       if @auth_details
