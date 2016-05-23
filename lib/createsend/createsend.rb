@@ -281,11 +281,9 @@ module CreateSend
       if @auth_details.has_key? :access_token
         options[:headers] = {
           "Authorization" => "Bearer #{@auth_details[:access_token]}" }
-      elsif @auth_details.has_key? :api_key
-        if not options.has_key? :basic_auth
-          options[:basic_auth] = {
-            :username => @auth_details[:api_key], :password => 'x' }
-        end
+      elsif @auth_details.has_key?(:api_key) && !options.has_key?(:basic_auth)
+        options[:basic_auth] = {
+          :username => @auth_details[:api_key], :password => 'x' }
       end
     end
 
