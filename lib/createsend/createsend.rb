@@ -123,14 +123,11 @@ module CreateSend
 
       def define_cs_method(name)
         define_method(name) do |*args|
-          options = {}
-          if args.size > 1
-            options = args[1]
-          end
-          args[1] = options
+          path, options, *rest = *args
+          options ||= {}
 
           add_auth_details_to_options(options)
-          handle_response Base.send(name, *args)
+          handle_response Base.send(name, path, options, *rest)
         end
         alias_method "cs_#{name}", name
       end
